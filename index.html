@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .faq-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .faq-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            position: relative;
+        }
+        .faq-question {
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-answer {
+            display: none;
+            padding: 10px 0;
+            color: #555;
+        }
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+        .arrow.rotate {
+            transform: rotate(90deg);
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .add-faq-form {
+            margin-top: 20px;
+        }
+        .add-faq-form input, .add-faq-form button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .add-faq-form button {
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="faq-container" id="faqContainer">
+        <!-- Initial FAQs -->
+        <div class="faq-item">
+            <div class="faq-question">
+                What is the purpose of this training? 
+                <span class="arrow">▶</span>
+            </div>
+            <div class="faq-answer">
+                This training is designed to help you understand the tools and resources available for your role and how to use them effectively.
+            </div>
+            <button class="delete-btn">Delete</button>
+        </div>
+    </div>
+
+    <!-- Add FAQ Form -->
+    <div class="add-faq-form">
+        <input type="text" id="newQuestion" placeholder="Enter your question" required>
+        <input type="text" id="newAnswer" placeholder="Enter your answer" required>
+        <button id="addFaqBtn">Add FAQ</button>
+    </div>
+
+    <script>
+        // Function to handle FAQ toggle
+        function toggleAnswer(event) {
+            const question = event.currentTarget;
+            const answer = question.nextElementSibling;
+            const arrow = question.querySelector('.arrow');
+
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                arrow.classList.remove('rotate');
+            } else {
+                answer.style.display = 'block';
+                arrow.classList.add('rotate');
+            }
+        }
+
+        // Function to delete an FAQ
+        function deleteFaq(event) {
+            const faqItem = event.target.closest('.faq-item');
+            faqItem.remove();
+        }
+
+        // Function to add a new FAQ
+        function addFaq() {
+            const questionText = document.getElementById('newQuestion').value;
+            const answerText = document.getElementById('newAnswer').value;
+
+            if (!questionText || !answerText) {
+                alert('Please fill in both the question and answer.');
+                return;
+            }
+
+            // Create new FAQ item
+            const faqItem = document.createElement('div');
+            faqItem.classList.add('faq-item');
+
+            faqItem.innerHTML = `
+                <div class="faq-question">
+                    ${questionText} <span class="arrow">▶</span>
+                </div>
+                <div class="faq-answer">
+                    ${answerText}
+                </div>
+                <button class="delete-btn">Delete</button>
+            `;
+
+            // Append the new FAQ to the container
+            document.getElementById('faqContainer').appendChild(faqItem);
+
+            // Add event listeners to the new elements
+            faqItem.querySelector('.faq-question').addEventListener('click', toggleAnswer);
+            faqItem.querySelector('.delete-btn').addEventListener('click', deleteFaq);
+
+            // Clear input fields
+            document.getElementById('newQuestion').value = '';
+            document.getElementById('newAnswer').value = '';
+        }
+
+        // Add event listeners to existing FAQs
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', toggleAnswer);
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', deleteFaq);
+        });
+
+        // Add event listener to the Add FAQ button
+        document.getElementById('addFaqBtn').addEventListener('click', addFaq);
+    </script>
+</body>
+</html>
